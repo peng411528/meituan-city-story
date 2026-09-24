@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fffaf2" />
+    <meta name="description" content="一座城市，六种生活方式。通过一段立体旅程，了解美团如何连接日常生活。独立制作的非官方产品介绍。" />
+    <title>生活，下一站见 · 美团产品介绍</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="intro" id="intro" aria-hidden="true">
+        <div class="intro__wash"></div>
+        <div class="intro__wordmark">美团</div>
+        <div class="intro__line"><span></span><span></span><span></span><span></span><span></span></div>
+        <p>一座城市，正在醒来。</p>
+      </div>
+
+      <header class="site-header">
+        <a class="brand" href="#start" aria-label="返回开始页面">
+          <span class="brand__icon" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M6 21.5 17.5 8l4.2 4.9L29 8l1.2 17.7a3 3 0 0 1-3 3.3H9a3 3 0 0 1-3-3.3Z" fill="currentColor"/><circle cx="13.2" cy="21" r="1.7" fill="#202116"/><circle cx="23.1" cy="21" r="1.7" fill="#202116"/></svg></span>
+          <span>美团<span class="brand__sub">生活导览</span></span>
+        </a>
+        <nav class="nav" aria-label="页面章节">
+          <a href="#services">探索服务</a>
+          <a href="#how">使用方式</a>
+          <a href="#weekend">周末出游</a>
+          <a href="#faq">常见问题</a>
+        </nav>
+        <div class="header-status"><span class="status-dot"></span> 城市正在运行</div>
+      </header>
+
+      <div class="scene" id="scene" aria-hidden="true"><canvas id="city-canvas"></canvas></div>
+      <div class="scene-vignette" aria-hidden="true"></div>
+      <div class="route-progress" aria-hidden="true"><span id="route-progress-fill"></span></div>
+      <div class="chapter-index" aria-hidden="true"><span id="chapter-num">01</span><span class="chapter-index__slash">/</span><span>11</span></div>
+
+      <main>
+        <section class="start-screen" id="start" data-stage="start">
+          <div class="start-screen__grain" aria-hidden="true"></div>
+          <div class="start-screen__layout">
+            <div class="start-screen__copy">
+              <p class="start-screen__kicker"><span class="start-screen__kicker-dot"></span> 美团生活导览 · 从这里开始</p>
+              <h1>今天的生活，<br /><em>从哪一站开始？</em></h1>
+              <p class="start-screen__lead">一顿热饭、一次相聚、刚好需要的东西，或一场临时起意的出发。移动鼠标，在这座城市里找到你的下一站。</p>
+              <div class="start-preview" aria-live="polite"><span id="start-preview-number">01 / 06</span><strong id="start-preview-title">外卖 · 把喜欢的味道带到身边</strong><p id="start-preview-copy">发现附近餐厅，挑选一顿想吃的饭。</p></div>
+              <a class="start-screen__cta" href="#hero"><span>开始探索城市</span><span class="start-screen__cta-arrow" aria-hidden="true">↗</span></a>
+              <p class="start-screen__tip">也可以点击右侧任意卡片，直达对应服务。</p>
+            </div>
+            <div class="start-atlas" id="start-atlas" aria-label="探索六项美团生活服务">
+              <div class="start-atlas__glow" aria-hidden="true"></div>
+              <svg class="start-atlas__route" viewBox="0 0 500 540" preserveAspectRatio="none" aria-hidden="true"><path d="M75 98C145 75 174 60 250 55S382 79 425 129 400 271 425 378 340 460 250 443 127 381 75 367 27 172 75 98"/></svg>
+              <div class="start-atlas__hub" aria-hidden="true"><span>6</span><small>种生活<br />即刻出发</small></div>
+              <div class="start-atlas__nodes" id="start-atlas-nodes"></div>
+              <p class="start-atlas__hint">MOVE TO EXPLORE <span>↗</span></p>
+            </div>
+          </div>
+        </section>
+        <section class="panel hero" id="hero" data-stage="hero">
+          <div class="panel__content hero__content">
+            <p class="hero__small">在一座城市里，遇见生活的更多可能</p>
+            <h1>生活，<br /><em>下一站见。</em></h1>
+            <p class="hero__lead">一顿热饭、一家喜欢的店、一场说走就走的周末。沿着这条黄色路线，看看美团连接了哪些日常时刻。</p>
+            <p class="hero__mission">“帮大家吃得更好，生活更好”<span>—— 美团的使命</span></p>
+            <a class="scroll-cue" href="#services"><span class="scroll-cue__line"></span> 向下滚动，出发 <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero__side-note" aria-hidden="true">CITY GUIDE<br />2026 / MEITUAN</div>
+        </section>
+
+        <section class="panel service service--first" id="services" data-stage="delivery">
+          <div class="panel__content">
+            <p class="service__category">城市生活 · 01</p>
+            <h2>想吃的，<br />正向你而来。</h2>
+            <p>在美团外卖发现附近餐厅，挑选喜欢的餐食并下单，让一顿饭来到身边。</p>
+            <span class="service__tag">外卖</span>
+          </div>
+        </section>
+
+        <section class="panel service" id="dine" data-stage="dine">
+          <div class="panel__content">
+            <p class="service__category">城市生活 · 02</p>
+            <h2>出门，<br />去遇见好店。</h2>
+            <p>查找附近餐厅与休闲娱乐去处，了解店铺信息，选择适合自己的到店体验。</p>
+            <span class="service__tag">到店消费</span>
+          </div>
+        </section>
+
+        <section class="panel service" id="shopping" data-stage="shopping">
+          <div class="panel__content">
+            <p class="service__category">城市生活 · 03</p>
+            <h2>日常所需，<br />就在附近。</h2>
+            <p>从超市商品到生鲜和日用品，在即时购物中找到当下需要的东西。</p>
+            <span class="service__tag">即时购物</span>
+          </div>
+        </section>
+
+        <section class="panel service" id="hotel" data-stage="hotel">
+          <div class="panel__content">
+            <p class="service__category">城市生活 · 04</p>
+            <h2>换个地方，<br />换种心情。</h2>
+            <p>浏览酒店和旅行体验，为一段短途出游找到合适的住处与目的地。</p>
+            <span class="service__tag">酒店与旅行</span>
+          </div>
+        </section>
+
+        <section class="panel service" id="health" data-stage="health">
+          <div class="panel__content">
+            <p class="service__category">城市生活 · 05</p>
+            <h2>需要关照时，<br />也能找到方向。</h2>
+            <p>在买药与健康服务中查找所需药品，了解附近药店提供的选择。</p>
+            <span class="service__tag">买药与健康</span>
+          </div>
+        </section>
+
+        <section class="panel service" id="mobility" data-stage="mobility">
+          <div class="panel__content">
+            <p class="service__category">城市生活 · 06</p>
+            <h2>下一站，<br />轻松抵达。</h2>
+            <p>骑行或打车，按当下的距离和节奏，选择合适的出行方式。</p>
+            <span class="service__tag">出行服务</span>
+          </div>
+        </section>
+
+        <section class="how-section" id="how" data-stage="how">
+          <div class="how-section__heading">
+            <p class="section-kicker">从念头到行动</p>
+            <h2>想做的事，<br /><em>几步就能开始。</em></h2>
+            <p>无论是一顿晚餐还是一次出游，都可以沿着相似的路径找到合适的选择。</p>
+          </div>
+          <div class="how-section__grid">
+            <div class="phone" aria-label="美团使用流程示意界面">
+              <div class="phone__speaker"></div>
+              <div class="phone__screen" id="phone-screen"></div>
+              <div class="phone__home"></div>
+            </div>
+            <div class="steps">
+              <article class="step is-active" data-step="0"><span>01</span><div><h3>发现服务</h3><p>选择当下想做的事，看看周围有什么。</p></div></article>
+              <article class="step" data-step="1"><span>02</span><div><h3>查看详情与评价</h3><p>了解地点、内容和其他人的体验。</p></div></article>
+              <article class="step" data-step="2"><span>03</span><div><h3>下单或预订</h3><p>确定适合自己的选择，完成下一步。</p></div></article>
+              <article class="step" data-step="3"><span>04</span><div><h3>查看订单</h3><p>在订单中找到已下单或预订的信息。</p></div></article>
+            </div>
+          </div>
+          <p class="how-section__note">界面为原创示意图，仅用于说明使用流程。</p>
+        </section>
+
+        <section class="weekend-flat" id="weekend" data-stage="weekend" aria-labelledby="weekend-title">
+          <div class="weekend-flat__head">
+            <div><p class="section-kicker">WEEKEND GUIDE / 一段周末出游</p><h2 id="weekend-title">周末，<em>换一种走法。</em></h2></div>
+            <p>住得舒适，看想看的风景，吃一顿记得住的饭，再去下一站。四件小事，连成一段完整的出游。</p>
+          </div>
+          <div class="weekend-flat__route" aria-hidden="true"><span>从这里出发</span><i></i><span>下一站，由你决定 ↗</span></div>
+          <div class="weekend-flat__cards" role="group" aria-label="周末出游的四个行程步骤">
+            <button class="weekend-flat__card is-selected" type="button" data-weekend="0" aria-pressed="true"><span class="weekend-flat__art" data-art="weekend-hotel"></span><span class="weekend-flat__number">01 / STAY</span><strong>先找一处落脚点</strong><small>浏览酒店信息，选一处适合这趟周末的住处。</small></button>
+            <button class="weekend-flat__card" type="button" data-weekend="1" aria-pressed="false"><span class="weekend-flat__art" data-art="weekend-ticket"></span><span class="weekend-flat__number">02 / SEE</span><strong>为好风景留张票</strong><small>看看景点介绍与门票，让想看的风景进入行程。</small></button>
+            <button class="weekend-flat__card" type="button" data-weekend="2" aria-pressed="false"><span class="weekend-flat__art" data-art="weekend-food"></span><span class="weekend-flat__number">03 / TASTE</span><strong>在路上吃点好的</strong><small>发现附近餐厅，让旅途多一段值得记住的味道。</small></button>
+            <button class="weekend-flat__card" type="button" data-weekend="3" aria-pressed="false"><span class="weekend-flat__art" data-art="weekend-ride"></span><span class="weekend-flat__number">04 / GO</span><strong>继续前往下一站</strong><small>按距离和节奏，选择合适的出行方式。</small></button>
+          </div>
+          <div class="weekend-flat__detail" aria-live="polite"><span id="weekend-detail-number">01 / 04 · 酒店住宿</span><p id="weekend-detail-copy">确定日期与位置，再看看房型、设施和评价，让周末有一个舒适的起点。</p><small>悬停探索 · 点击保留选择</small></div>
+        </section>
+
+        <section class="closing" id="closing" data-stage="closing">
+          <div class="closing__inner"><p>城市一直在继续，<br />下一站由你决定。</p><a href="#start">回到起点 <span aria-hidden="true">↑</span></a></div>
+          <aside class="closing-faq" id="faq" aria-labelledby="faq-title">
+            <div class="closing-faq__intro"><h2 id="faq-title">常见问题</h2><small>本页为独立制作的产品介绍，非美团官方页面。</small></div>
+            <div class="faq-list">
+              <details><summary>美团可以满足哪些日常生活需求？<span aria-hidden="true">+</span></summary><p>这份介绍涵盖外卖、到店消费、即时购物、酒店与旅行、买药与健康、出行六类常见服务。具体可用服务以美团 App 内的当地页面为准。</p></details>
+              <details><summary>如何查找附近的服务？<span aria-hidden="true">+</span></summary><p>在美团 App 中选择相应服务，浏览附近的商家、地点或商品，再查看详情与评价，找到适合自己的选择。</p></details>
+              <details><summary>下单或预订后，在哪里查看订单？<span aria-hidden="true">+</span></summary><p>通常可在美团 App 的订单页面查看已下单或预订的内容；不同服务的具体信息以 App 页面显示为准。</p></details>
+            </div>
+          </aside>
+        </section>
+      </main>
+      <button id="replay-intro" class="replay-intro" type="button" aria-label="重看片头">重看片头 ↺</button>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
