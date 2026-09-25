@@ -628,6 +628,7 @@ function snapTo(id:string,duration=.48){
   const destination=document.getElementById(id)
   if(!destination || isSnapping)return
   isSnapping=true
+  interfaceSound.play('transition')
   ignoreSnapUntil=performance.now()+Math.max(1000,duration*1000+150)
   const root=document.documentElement
   const previousBehavior=root.style.scrollBehavior
@@ -720,27 +721,31 @@ ScrollTrigger.create({
 // Sound begins only after a user gesture; a saved preference controls every cue.
 const soundToggle=document.querySelector<HTMLButtonElement>('#sound-toggle')!
 function updateSoundToggle(){
-  soundToggle.setAttribute('aria-pressed',String(interfaceSound.enabled))
-  soundToggle.setAttribute('aria-label',interfaceSound.enabled?'关闭音效':'开启音效')
-  soundToggle.querySelector<HTMLElement>('.sound-toggle__label')!.textContent=interfaceSound.enabled?'音效开启':'音效关闭'
+  const ready=interfaceSound.ready
+  const label=!interfaceSound.enabled?'开启音效':ready?'音效开启':'点击开启音效'
+  soundToggle.setAttribute('aria-pressed',String(ready))
+  soundToggle.setAttribute('aria-label',ready?'关闭音效':'开启音效')
+  soundToggle.querySelector<HTMLElement>('.sound-toggle__label')!.textContent=label
 }
 updateSoundToggle()
 soundToggle.addEventListener('click',()=>{
-  interfaceSound.setEnabled(!interfaceSound.enabled)
-  updateSoundToggle()
-  if(interfaceSound.enabled)void interfaceSound.arm().then(()=>interfaceSound.play('click'))
+  if(interfaceSound.ready){interfaceSound.setEnabled(false);updateSoundToggle();return}
+  interfaceSound.setEnabled(true)
+  void interfaceSound.arm().then(ready=>{updateSoundToggle();if(ready)interfaceSound.play('click')})
 })
 document.addEventListener('pointerdown',event=>{
   if(event.pointerType==='mouse' && event.button!==0)return
-  void interfaceSound.arm().then(()=>{
-    if(!soundToggle.contains(event.target as Node))interfaceSound.play('click')
+  void interfaceSound.arm().then(ready=>{
+    updateSoundToggle()
+    if(ready&&!soundToggle.contains(event.target as Node))interfaceSound.play('click')
   })
 },{passive:true})
 document.addEventListener('keydown',event=>{
   if(event.repeat || !['Enter',' '].includes(event.key) || !(event.target instanceof Element))return
   if(!event.target.closest('a,button,summary,.story-card'))return
-  void interfaceSound.arm().then(()=>{
-    if(!soundToggle.contains(event.target as Node))interfaceSound.play('click')
+  void interfaceSound.arm().then(ready=>{
+    updateSoundToggle()
+    if(ready&&!soundToggle.contains(event.target as Node))interfaceSound.play('click')
   })
 })
 

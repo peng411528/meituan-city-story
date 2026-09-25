@@ -4,8 +4,10 @@ class InterfaceSound {
   private context: AudioContext | null = null
   private master: GainNode | null = null
   private armed = false
-  private lastPlayed: Record<SoundCue, number> = { card: 0, transition: 0, click: 0 }
+  private lastPlayed: Record<SoundCue, number> = { card: -Infinity, transition: -Infinity, click: -Infinity }
   enabled = true
+
+  get ready() { return this.enabled && this.armed && this.context?.state === 'running' }
 
   constructor() {
     try { this.enabled = localStorage.getItem('meituan-city-sound') !== 'off' } catch { /* Storage may be unavailable. */ }
@@ -13,30 +15,32 @@ class InterfaceSound {
 
   setEnabled(enabled: boolean) {
     this.enabled = enabled
-    if (this.context && this.master) this.master.gain.setTargetAtTime(enabled ? 0.16 : 0, this.context.currentTime, 0.01)
+    if (this.context && this.master) this.master.gain.setTargetAtTime(enabled ? 0.2 : 0, this.context.currentTime, 0.01)
     try { localStorage.setItem('meituan-city-sound', enabled ? 'on' : 'off') } catch { /* Keep the current session setting. */ }
-    if (enabled) void this.arm()
   }
 
   async arm() {
-    if (!this.enabled || document.hidden || !window.AudioContext) return
+    if (!this.enabled || document.hidden || !window.AudioContext) return false
     this.armed = true
     try {
       if (!this.context) {
         this.context = new AudioContext()
         this.master = this.context.createGain()
-        this.master.gain.value = 0.16
+        this.master.gain.value = 0.2
         this.master.connect(this.context.destination)
       }
       if (this.context.state === 'suspended') await this.context.resume()
-    } catch { /* Unsupported or blocked audio leaves the page usable. */ }
+      return this.context.state === 'running'
+    } catch { return false /* Unsupported or blocked audio leaves the page usable. */ }
   }
 
   play(cue: SoundCue) {
     const context = this.context
-    if (!this.enabled || !this.armed || document.hidden || !context || context.state !== 'running' || !this.master) return
+    if (!this.enabled || !this.armed || document.hidden || !context || !this.master) return
+    if (context.state === 'suspended') { void this.arm().then(ready => { if (ready) this.play(cue) }); return }
+    if (context.state !== 'running') return
     const now = performance.now()
-    const cooldown = cue === 'transition' ? 350 : cue === 'card' ? 110 : 45
+    const cooldown = cue === 'transition' ? 1200 : cue === 'card' ? 110 : 45
     if (now - this.lastPlayed[cue] < cooldown) return
     this.lastPlayed[cue] = now
 
@@ -56,11 +60,11 @@ class InterfaceSound {
       oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect() }
     }
 
-    if (cue === 'card') tone(510, 710, 0.115, 0.12, 0, 'triangle')
-    if (cue === 'click') tone(390, 225, 0.09, 0.15, 0, 'triangle')
+    if (cue === 'card') tone(510, 710, 0.115, 0.09, 0, 'triangle')
+    if (cue === 'click') tone(390, 225, 0.09, 0.12, 0, 'triangle')
     if (cue === 'transition') {
-      tone(235, 420, 0.31, 0.13)
-      tone(355, 520, 0.24, 0.075, 0.065, 'triangle')
+      tone(220, 430, 0.38, 0.32)
+      tone(340, 560, 0.29, 0.18, 0.075, 'triangle')
     }
   }
 }
