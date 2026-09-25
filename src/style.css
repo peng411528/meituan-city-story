@@ -267,7 +267,7 @@ body{background:var(--cream)}
 .start-screen__sound-hint{display:block;margin-top:6px;color:#536855;font-size:11px;font-weight:700}
 
 /* The supplied Meituan delivery mascot repeats smaller and fainter behind a moving pointer. */
-.cursor-trail{position:fixed;z-index:21;left:0;top:0;width:52px;height:45px;pointer-events:none;opacity:0;background:url('./assets/meituan-delivery-icon.png') center/contain no-repeat;transform:translate3d(-100%,0,0) translate(-50%,-50%) scale(var(--trail-scale));transition:opacity .18s ease}
+.cursor-trail{position:fixed;z-index:21;left:0;top:0;width:40px;height:44px;pointer-events:none;opacity:0;background:url('./assets/meituan-delivery-icon.svg') center/contain no-repeat;transform:translate3d(-100%,0,0) translate(-50%,-50%) scale(var(--trail-scale));transition:opacity .18s ease}
 .cursor-trail--near{--trail-scale:1}
 .cursor-trail--middle{--trail-scale:.72}
 .cursor-trail--far{--trail-scale:.48}
