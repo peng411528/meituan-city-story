@@ -254,3 +254,12 @@ body{background:var(--cream)}
 .closing-faq .faq-list summary span{flex:none;font-size:19px}
 .closing-faq .faq-list details p{position:absolute;z-index:5;left:-1px;right:-1px;bottom:calc(100% + 7px);max-width:none;margin:0;padding:13px 14px;border:1px solid #cbd3c8;border-radius:8px;background:#fffef9;box-shadow:0 10px 25px rgba(32,43,38,.13);color:#425347;font-size:11px;font-weight:500;line-height:1.7}
 @media(max-width:800px){.closing{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:110px 25px 35px}.closing__inner{transform:none}.closing-faq{position:relative;left:auto;right:auto;bottom:auto;width:100%;margin-top:70px}.closing-faq__intro{display:block}.closing-faq__intro small{display:block;margin-top:5px}.closing-faq .faq-list{grid-template-columns:1fr}.closing-faq .faq-list details p{position:static;border:0;border-top:1px solid #d8ddcf;border-radius:0;box-shadow:none}}
+
+/* Quiet, explicit control for the optional interface soundtrack. */
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:18px}
+.sound-toggle{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #cdd5ca;border-radius:8px;background:#fffef9;color:#31483a;font:inherit;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;transition:background-color .18s,border-color .18s}
+.sound-toggle:hover,.sound-toggle:focus-visible{background:#fff1c6;border-color:#a88429}
+.sound-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sound-toggle[aria-pressed="false"]{color:#667268}
+.sound-toggle[aria-pressed="false"] .sound-toggle__wave{opacity:.25}
+@media(max-width:900px){.header-actions{gap:8px}.header-status{display:none}}

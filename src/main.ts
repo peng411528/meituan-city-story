@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { storyCards, cardArtwork } from './cards'
+import { interfaceSound } from './sound'
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
@@ -402,7 +403,7 @@ function previewService(index:number|null){
   startAtlas.style.setProperty('--active-tint',item.tint)
 }
 startNodeEls.forEach((node,i)=>{
-  node.addEventListener('pointerenter',()=>previewService(i))
+  node.addEventListener('pointerenter',()=>{previewService(i);interfaceSound.play('card')})
   node.addEventListener('focus',()=>previewService(i))
 })
 startAtlas.addEventListener('pointerleave',()=>previewService(null))
@@ -443,7 +444,7 @@ function showWeekend(index:number){
   })
 }
 weekendCards.forEach((card,i)=>{
-  card.addEventListener('pointerenter',()=>showWeekend(i))
+  card.addEventListener('pointerenter',()=>{showWeekend(i);interfaceSound.play('card')})
   card.addEventListener('focus',()=>showWeekend(i))
   card.addEventListener('click',()=>{selectedWeekend=i;showWeekend(i)})
   card.addEventListener('pointerleave',()=>showWeekend(selectedWeekend))
@@ -495,7 +496,7 @@ panels.forEach(panel=>{
       }
     }
     settleCard[i]=settle
-    card.addEventListener('pointerenter',straighten)
+    card.addEventListener('pointerenter',()=>{straighten();interfaceSound.play('card')})
     card.addEventListener('focus',straighten)
     card.addEventListener('pointerleave',()=>{if(document.activeElement!==card)settle()})
     card.addEventListener('blur',settle)
@@ -579,6 +580,7 @@ function pulseRipple(stage:string){
   }
 }
 function setActive(stage:string,index:number){
+  if(stage!==activeStage)interfaceSound.play('transition')
   pulseRipple(stage)
   activeStage=stage
   chapterNum.textContent=String(index+1).padStart(2,'0')
@@ -713,6 +715,33 @@ ScrollTrigger.create({
   trigger:'#closing',start:'top 60%',
   onEnter:()=>{replayButton.style.opacity='0';replayButton.style.pointerEvents='none';document.querySelector<HTMLElement>('.chapter-index')!.style.opacity='0'},
   onLeaveBack:()=>{replayButton.style.opacity='';replayButton.style.pointerEvents='';document.querySelector<HTMLElement>('.chapter-index')!.style.opacity=''}
+})
+
+// Sound begins only after a user gesture; a saved preference controls every cue.
+const soundToggle=document.querySelector<HTMLButtonElement>('#sound-toggle')!
+function updateSoundToggle(){
+  soundToggle.setAttribute('aria-pressed',String(interfaceSound.enabled))
+  soundToggle.setAttribute('aria-label',interfaceSound.enabled?'关闭音效':'开启音效')
+  soundToggle.querySelector<HTMLElement>('.sound-toggle__label')!.textContent=interfaceSound.enabled?'音效开启':'音效关闭'
+}
+updateSoundToggle()
+soundToggle.addEventListener('click',()=>{
+  interfaceSound.setEnabled(!interfaceSound.enabled)
+  updateSoundToggle()
+  if(interfaceSound.enabled)void interfaceSound.arm().then(()=>interfaceSound.play('click'))
+})
+document.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='mouse' && event.button!==0)return
+  void interfaceSound.arm().then(()=>{
+    if(!soundToggle.contains(event.target as Node))interfaceSound.play('click')
+  })
+},{passive:true})
+document.addEventListener('keydown',event=>{
+  if(event.repeat || !['Enter',' '].includes(event.key) || !(event.target instanceof Element))return
+  if(!event.target.closest('a,button,summary,.story-card'))return
+  void interfaceSound.arm().then(()=>{
+    if(!soundToggle.contains(event.target as Node))interfaceSound.play('click')
+  })
 })
 
 // Keep the initial scene ready before a scroll or pointer event occurs.

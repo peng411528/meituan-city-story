@@ -27,7 +27,13 @@
           <a href="#weekend">周末出游</a>
           <a href="#faq">常见问题</a>
         </nav>
-        <div class="header-status"><span class="status-dot"></span> 城市正在运行</div>
+        <div class="header-actions">
+          <div class="header-status"><span class="status-dot"></span> 城市正在运行</div>
+          <button id="sound-toggle" class="sound-toggle" type="button" aria-label="关闭音效" aria-pressed="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path class="sound-toggle__wave" d="M16 9a4 4 0 0 1 0 6m2.5-9a8 8 0 0 1 0 12"/></svg>
+            <span class="sound-toggle__label">音效开启</span>
+          </button>
+        </div>
       </header>
 
       <div class="scene" id="scene" aria-hidden="true"><canvas id="city-canvas"></canvas></div>
