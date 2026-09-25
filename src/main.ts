@@ -387,8 +387,34 @@ const startServices=[
   {stage:'health',href:'#health',name:'买药健康',line:'需要关照时，找到方向',copy:'查找药品和附近药店，了解实际可选的信息。',art:0,tint:'#c7f3da'},
   {stage:'mobility',href:'#mobility',name:'出行服务',line:'下一站，轻松抵达',copy:'按距离与节奏，选择骑行或打车继续向前。',art:0,tint:'#d1edff'}
 ] as const
+const startScreen=document.querySelector<HTMLElement>('#start')!
+const startPointerLight=document.querySelector<HTMLElement>('.start-screen__pointer-light')!
 const startAtlas=document.querySelector<HTMLElement>('#start-atlas')!
 const startNodes=document.querySelector<HTMLElement>('#start-atlas-nodes')!
+if(!reducedMotion){
+  let pointerFrame=0
+  let pointerX=0
+  let pointerY=0
+  startScreen.addEventListener('pointermove',event=>{
+    if(event.pointerType==='touch')return
+    pointerX=event.clientX
+    pointerY=event.clientY-startScreen.getBoundingClientRect().top
+    startScreen.classList.add('has-pointer')
+    if(pointerFrame)return
+    pointerFrame=requestAnimationFrame(()=>{
+      startPointerLight.style.transform=`translate3d(${pointerX}px,${pointerY}px,0) translate(-50%,-50%)`
+      pointerFrame=0
+    })
+  },{passive:true})
+  startScreen.addEventListener('pointerleave',()=>startScreen.classList.remove('has-pointer'))
+  const orbitObserver=new IntersectionObserver(entries=>{
+    startScreen.classList.toggle('is-orbiting',entries[0].isIntersecting&&!document.hidden)
+  },{threshold:0.05})
+  orbitObserver.observe(startScreen)
+  document.addEventListener('visibilitychange',()=>{
+    startScreen.classList.toggle('is-orbiting',!document.hidden&&startScreen.getBoundingClientRect().bottom>0&&startScreen.getBoundingClientRect().top<window.innerHeight)
+  })
+}
 startNodes.innerHTML=startServices.map((item,i)=>`<a class="start-atlas__node" href="${item.href}" data-preview="${i}" aria-label="探索${item.name}：${item.line}"><span class="start-atlas__node-inner"><span class="start-atlas__node-art">${cardArtwork(item.stage,item.art,item.name)}</span><span class="start-atlas__node-meta"><small>0${i+1}</small><strong>${item.name}</strong><i aria-hidden="true">↗</i></span></span></a>`).join('')
 const startNodeEls=[...startNodes.querySelectorAll<HTMLAnchorElement>('.start-atlas__node')]
 const startPreviewNumber=document.querySelector<HTMLElement>('#start-preview-number')!
