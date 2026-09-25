@@ -9,14 +9,9 @@ class InterfaceSound {
 
   get ready() { return this.enabled && this.armed && this.context?.state === 'running' }
 
-  constructor() {
-    try { this.enabled = localStorage.getItem('meituan-city-sound') !== 'off' } catch { /* Storage may be unavailable. */ }
-  }
-
   setEnabled(enabled: boolean) {
     this.enabled = enabled
     if (this.context && this.master) this.master.gain.setTargetAtTime(enabled ? 0.2 : 0, this.context.currentTime, 0.01)
-    try { localStorage.setItem('meituan-city-sound', enabled ? 'on' : 'off') } catch { /* Keep the current session setting. */ }
   }
 
   async arm() {

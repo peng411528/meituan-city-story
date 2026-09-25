@@ -718,18 +718,17 @@ ScrollTrigger.create({
   onLeaveBack:()=>{replayButton.style.opacity='';replayButton.style.pointerEvents='';document.querySelector<HTMLElement>('.chapter-index')!.style.opacity=''}
 })
 
-// Sound begins only after a user gesture; a saved preference controls every cue.
+// Sound is on by default; a user gesture unlocks playback where browsers require it.
 const soundToggle=document.querySelector<HTMLButtonElement>('#sound-toggle')!
 function updateSoundToggle(){
-  const ready=interfaceSound.ready
-  const label=!interfaceSound.enabled?'开启音效':ready?'音效开启':'点击开启音效'
-  soundToggle.setAttribute('aria-pressed',String(ready))
-  soundToggle.setAttribute('aria-label',ready?'关闭音效':'开启音效')
+  const label=interfaceSound.enabled?'音效开启':'开启音效'
+  soundToggle.setAttribute('aria-pressed',String(interfaceSound.enabled))
+  soundToggle.setAttribute('aria-label',interfaceSound.enabled?'关闭音效':'开启音效')
   soundToggle.querySelector<HTMLElement>('.sound-toggle__label')!.textContent=label
 }
 updateSoundToggle()
 soundToggle.addEventListener('click',()=>{
-  if(interfaceSound.ready){interfaceSound.setEnabled(false);updateSoundToggle();return}
+  if(interfaceSound.enabled){interfaceSound.setEnabled(false);updateSoundToggle();return}
   interfaceSound.setEnabled(true)
   void interfaceSound.arm().then(ready=>{updateSoundToggle();if(ready)interfaceSound.play('click')})
 })
