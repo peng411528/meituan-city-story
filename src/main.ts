@@ -389,22 +389,42 @@ const startServices=[
 ] as const
 const startScreen=document.querySelector<HTMLElement>('#start')!
 const startPointerLight=document.querySelector<HTMLElement>('.start-screen__pointer-light')!
+const startPointerTrail=document.querySelector<HTMLElement>('.start-screen__pointer-trail')!
+const startPointerTrailFar=document.querySelector<HTMLElement>('.start-screen__pointer-trail--far')!
 const startAtlas=document.querySelector<HTMLElement>('#start-atlas')!
 const startNodes=document.querySelector<HTMLElement>('#start-atlas-nodes')!
 if(!reducedMotion){
   let pointerFrame=0
   let pointerX=0
   let pointerY=0
+  let trailX=0
+  let trailY=0
+  let farX=0
+  let farY=0
+  const moveLight=(element:HTMLElement,x:number,y:number)=>{
+    element.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%)`
+  }
+  const animatePointer=()=>{
+    moveLight(startPointerLight,pointerX,pointerY)
+    trailX+=(pointerX-trailX)*.26
+    trailY+=(pointerY-trailY)*.26
+    farX+=(trailX-farX)*.18
+    farY+=(trailY-farY)*.18
+    moveLight(startPointerTrail,trailX,trailY)
+    moveLight(startPointerTrailFar,farX,farY)
+    const gap=Math.hypot(pointerX-trailX,pointerY-trailY)+Math.hypot(trailX-farX,trailY-farY)
+    pointerFrame=gap>.6?requestAnimationFrame(animatePointer):0
+  }
   startScreen.addEventListener('pointermove',event=>{
     if(event.pointerType==='touch')return
     pointerX=event.clientX
     pointerY=event.clientY-startScreen.getBoundingClientRect().top
+    if(!startScreen.classList.contains('has-pointer')){
+      trailX=farX=pointerX
+      trailY=farY=pointerY
+    }
     startScreen.classList.add('has-pointer')
-    if(pointerFrame)return
-    pointerFrame=requestAnimationFrame(()=>{
-      startPointerLight.style.transform=`translate3d(${pointerX}px,${pointerY}px,0) translate(-50%,-50%)`
-      pointerFrame=0
-    })
+    if(!pointerFrame)pointerFrame=requestAnimationFrame(animatePointer)
   },{passive:true})
   startScreen.addEventListener('pointerleave',()=>startScreen.classList.remove('has-pointer'))
   const orbitObserver=new IntersectionObserver(entries=>{
@@ -706,16 +726,30 @@ const screenBodies=[
   `<div class="screen-header">订单已记录<small>你的行程，一目了然</small></div><div class="screen-body"><div class="screen-order"><strong>周末行程</strong><span>预订信息与订单详情</span><div class="screen-order__line"></div><span>可在订单页面查看</span></div></div>`
 ]
 phoneScreen.innerHTML=screenBodies[0]
+phoneScreen.dataset.step='0'
 const steps=[...document.querySelectorAll<HTMLElement>('.step')]
 steps.forEach((step,index)=>{
   ScrollTrigger.create({trigger:step,start:'top 65%',end:'bottom 35%',onEnter:()=>activateStep(index),onEnterBack:()=>activateStep(index)})
+  step.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch')activateStep(index)})
+  step.addEventListener('focus',()=>activateStep(index))
+  step.addEventListener('click',()=>activateStep(index))
+  step.addEventListener('keydown',event=>{
+    if(event.key==='Enter'||event.key===' '){event.preventDefault();activateStep(index)}
+  })
 })
 function activateStep(index:number){
-  steps.forEach((s,i)=>s.classList.toggle('is-active',i===index))
+  steps.forEach((step,i)=>{
+    step.classList.toggle('is-active',i===index)
+    step.setAttribute('aria-pressed',String(i===index))
+  })
   if(phoneScreen.dataset.step===String(index))return
   phoneScreen.dataset.step=String(index)
-  if(reducedMotion){phoneScreen.innerHTML=screenBodies[index];return}
-  gsap.to(phoneScreen,{opacity:0,y:-8,duration:.16,onComplete:()=>{phoneScreen.innerHTML=screenBodies[index];gsap.fromTo(phoneScreen,{opacity:0,y:12},{opacity:1,y:0,duration:.28,ease:'power2.out'})}})
+  gsap.killTweensOf(phoneScreen)
+  if(reducedMotion){phoneScreen.innerHTML=screenBodies[index];gsap.set(phoneScreen,{opacity:1,y:0});return}
+  gsap.to(phoneScreen,{opacity:0,y:-8,duration:.14,overwrite:true,onComplete:()=>{
+    phoneScreen.innerHTML=screenBodies[index]
+    gsap.fromTo(phoneScreen,{opacity:0,y:9},{opacity:1,y:0,duration:.24,ease:'power2.out',overwrite:true})
+  }})
 }
 
 // Short intro only on the first visit; replay stays available as a real control.

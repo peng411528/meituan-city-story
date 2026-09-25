@@ -45,6 +45,8 @@
         <section class="start-screen" id="start" data-stage="start">
           <div class="start-screen__grain" aria-hidden="true"></div>
           <div class="start-screen__pointer-light" aria-hidden="true"></div>
+          <div class="start-screen__pointer-trail" aria-hidden="true"></div>
+          <div class="start-screen__pointer-trail start-screen__pointer-trail--far" aria-hidden="true"></div>
           <div class="start-screen__layout">
             <div class="start-screen__copy">
               <p class="start-screen__kicker"><span class="start-screen__kicker-dot"></span> 美团生活导览 · 从这里开始</p>
@@ -141,10 +143,10 @@
               <div class="phone__home"></div>
             </div>
             <div class="steps">
-              <article class="step is-active" data-step="0"><span>01</span><div><h3>发现服务</h3><p>选择当下想做的事，看看周围有什么。</p></div></article>
-              <article class="step" data-step="1"><span>02</span><div><h3>查看详情与评价</h3><p>了解地点、内容和其他人的体验。</p></div></article>
-              <article class="step" data-step="2"><span>03</span><div><h3>下单或预订</h3><p>确定适合自己的选择，完成下一步。</p></div></article>
-              <article class="step" data-step="3"><span>04</span><div><h3>查看订单</h3><p>在订单中找到已下单或预订的信息。</p></div></article>
+              <article class="step is-active" data-step="0" role="button" tabindex="0" aria-pressed="true"><span>01</span><div><h3>发现服务</h3><p>选择当下想做的事，看看周围有什么。</p></div></article>
+              <article class="step" data-step="1" role="button" tabindex="0" aria-pressed="false"><span>02</span><div><h3>查看详情与评价</h3><p>了解地点、内容和其他人的体验。</p></div></article>
+              <article class="step" data-step="2" role="button" tabindex="0" aria-pressed="false"><span>03</span><div><h3>下单或预订</h3><p>确定适合自己的选择，完成下一步。</p></div></article>
+              <article class="step" data-step="3" role="button" tabindex="0" aria-pressed="false"><span>04</span><div><h3>查看订单</h3><p>在订单中找到已下单或预订的信息。</p></div></article>
             </div>
           </div>
           <p class="how-section__note">界面为原创示意图，仅用于说明使用流程。</p>

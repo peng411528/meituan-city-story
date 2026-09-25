@@ -267,8 +267,11 @@ body{background:var(--cream)}
 .start-screen__sound-hint{display:block;margin-top:6px;color:#536855;font-size:11px;font-weight:700}
 
 /* The opening responds to the pointer while six destinations follow the city route. */
-.start-screen__pointer-light{position:absolute;z-index:0;left:0;top:0;width:clamp(420px,46vw,720px);aspect-ratio:1;border-radius:50%;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(56,147,183,.23) 0%,rgba(77,178,195,.11) 34%,rgba(255,255,255,.06) 53%,transparent 72%);transform:translate3d(-100%,0,0);transition:opacity .45s ease}
-.start-screen.has-pointer .start-screen__pointer-light{opacity:1}
+.start-screen__pointer-light,.start-screen__pointer-trail{position:absolute;z-index:0;left:0;top:0;aspect-ratio:1;border-radius:50%;pointer-events:none;opacity:0;transform:translate3d(-100%,0,0);transition:opacity .28s ease}
+.start-screen__pointer-light{width:64px;background:radial-gradient(circle,rgba(28,139,174,.46),rgba(55,165,188,.19) 43%,transparent 72%)}
+.start-screen__pointer-trail{width:48px;background:radial-gradient(circle,rgba(43,151,181,.22),transparent 75%)}
+.start-screen__pointer-trail--far{width:34px;background:radial-gradient(circle,rgba(43,151,181,.15),transparent 76%)}
+.start-screen.has-pointer .start-screen__pointer-light,.start-screen.has-pointer .start-screen__pointer-trail{opacity:1}
 .start-atlas__nodes{position:absolute;inset:0;transform-origin:50% 50%}
 .start-atlas__route{transform-origin:50% 50%}
 .start-screen.is-orbiting .start-atlas__nodes,.start-screen.is-orbiting .start-atlas__route{animation:atlas-orbit 72s linear infinite}
@@ -276,4 +279,10 @@ body{background:var(--cream)}
 .start-atlas:has(.start-atlas__node:is(:hover,:focus-visible)) .start-atlas__nodes,.start-atlas:has(.start-atlas__node:is(:hover,:focus-visible)) .start-atlas__route,.start-atlas:has(.start-atlas__node:is(:hover,:focus-visible)) .start-atlas__node-inner{animation-play-state:paused}
 @keyframes atlas-orbit{to{transform:rotate(360deg)}}
 @keyframes atlas-counterorbit{to{transform:rotate(-360deg)}}
-@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.start-screen__pointer-light{display:none}.start-screen.is-orbiting .start-atlas__nodes,.start-screen.is-orbiting .start-atlas__route,.start-screen.is-orbiting .start-atlas__node-inner{animation:none}}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.start-screen__pointer-light,.start-screen__pointer-trail{display:none}.start-screen.is-orbiting .start-atlas__nodes,.start-screen.is-orbiting .start-atlas__route,.start-screen.is-orbiting .start-atlas__node-inner{animation:none}}
+
+/* Each use step responds directly to pointer travel and keyboard selection. */
+.step{cursor:pointer;outline-offset:4px}
+.step:hover:not(.is-active){background:rgba(255,207,36,.07)}
+.step:focus-visible{outline:3px solid #b87f00;opacity:1}
+@media(prefers-reduced-motion:reduce){.step{transition:none}}
