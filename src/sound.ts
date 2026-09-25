@@ -4,6 +4,7 @@ class InterfaceSound {
   private context: AudioContext | null = null
   private master: GainNode | null = null
   private armed = false
+  private readonly outputLevel = 0.8
   private lastPlayed: Record<SoundCue, number> = { card: -Infinity, transition: -Infinity, click: -Infinity }
   enabled = true
 
@@ -11,7 +12,7 @@ class InterfaceSound {
 
   setEnabled(enabled: boolean) {
     this.enabled = enabled
-    if (this.context && this.master) this.master.gain.setTargetAtTime(enabled ? 0.2 : 0, this.context.currentTime, 0.01)
+    if (this.context && this.master) this.master.gain.setTargetAtTime(enabled ? this.outputLevel : 0, this.context.currentTime, 0.01)
   }
 
   async arm() {
@@ -21,7 +22,7 @@ class InterfaceSound {
       if (!this.context) {
         this.context = new AudioContext()
         this.master = this.context.createGain()
-        this.master.gain.value = 0.2
+        this.master.gain.value = this.outputLevel
         this.master.connect(this.context.destination)
       }
       if (this.context.state === 'suspended') await this.context.resume()
