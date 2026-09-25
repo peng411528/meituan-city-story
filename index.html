@@ -44,9 +44,6 @@
       <main>
         <section class="start-screen" id="start" data-stage="start">
           <div class="start-screen__grain" aria-hidden="true"></div>
-          <div class="start-screen__pointer-light" aria-hidden="true"></div>
-          <div class="start-screen__pointer-trail" aria-hidden="true"></div>
-          <div class="start-screen__pointer-trail start-screen__pointer-trail--far" aria-hidden="true"></div>
           <div class="start-screen__layout">
             <div class="start-screen__copy">
               <p class="start-screen__kicker"><span class="start-screen__kicker-dot"></span> 美团生活导览 · 从这里开始</p>
@@ -179,6 +176,9 @@
           </aside>
         </section>
       </main>
+      <div class="cursor-trail cursor-trail--core" aria-hidden="true"></div>
+      <div class="cursor-trail cursor-trail--near" aria-hidden="true"></div>
+      <div class="cursor-trail cursor-trail--far" aria-hidden="true"></div>
       <button id="replay-intro" class="replay-intro" type="button" aria-label="重看片头">重看片头 ↺</button>
     </div>
     <script type="module" src="/src/main.ts"></script>

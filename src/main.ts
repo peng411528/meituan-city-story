@@ -388,50 +388,51 @@ const startServices=[
   {stage:'mobility',href:'#mobility',name:'出行服务',line:'下一站，轻松抵达',copy:'按距离与节奏，选择骑行或打车继续向前。',art:0,tint:'#d1edff'}
 ] as const
 const startScreen=document.querySelector<HTMLElement>('#start')!
-const startPointerLight=document.querySelector<HTMLElement>('.start-screen__pointer-light')!
-const startPointerTrail=document.querySelector<HTMLElement>('.start-screen__pointer-trail')!
-const startPointerTrailFar=document.querySelector<HTMLElement>('.start-screen__pointer-trail--far')!
 const startAtlas=document.querySelector<HTMLElement>('#start-atlas')!
 const startNodes=document.querySelector<HTMLElement>('#start-atlas-nodes')!
 if(!reducedMotion){
+  const [core,near,far]=[...document.querySelectorAll<HTMLElement>('.cursor-trail')]
   let pointerFrame=0
   let pointerX=0
   let pointerY=0
-  let trailX=0
-  let trailY=0
+  let nearX=0
+  let nearY=0
   let farX=0
   let farY=0
   const moveLight=(element:HTMLElement,x:number,y:number)=>{
     element.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%)`
   }
   const animatePointer=()=>{
-    moveLight(startPointerLight,pointerX,pointerY)
-    trailX+=(pointerX-trailX)*.26
-    trailY+=(pointerY-trailY)*.26
-    farX+=(trailX-farX)*.18
-    farY+=(trailY-farY)*.18
-    moveLight(startPointerTrail,trailX,trailY)
-    moveLight(startPointerTrailFar,farX,farY)
-    const gap=Math.hypot(pointerX-trailX,pointerY-trailY)+Math.hypot(trailX-farX,trailY-farY)
+    moveLight(core,pointerX,pointerY)
+    nearX+=(pointerX-nearX)*.26
+    nearY+=(pointerY-nearY)*.26
+    farX+=(nearX-farX)*.18
+    farY+=(nearY-farY)*.18
+    moveLight(near,nearX,nearY)
+    moveLight(far,farX,farY)
+    const gap=Math.hypot(pointerX-nearX,pointerY-nearY)+Math.hypot(nearX-farX,nearY-farY)
     pointerFrame=gap>.6?requestAnimationFrame(animatePointer):0
   }
-  startScreen.addEventListener('pointermove',event=>{
+  const hidePointer=()=>document.documentElement.classList.remove('has-pointer')
+  window.addEventListener('pointermove',event=>{
     if(event.pointerType==='touch')return
     pointerX=event.clientX
-    pointerY=event.clientY-startScreen.getBoundingClientRect().top
-    if(!startScreen.classList.contains('has-pointer')){
-      trailX=farX=pointerX
-      trailY=farY=pointerY
+    pointerY=event.clientY
+    if(!document.documentElement.classList.contains('has-pointer')){
+      nearX=farX=pointerX
+      nearY=farY=pointerY
     }
-    startScreen.classList.add('has-pointer')
+    document.documentElement.classList.add('has-pointer')
     if(!pointerFrame)pointerFrame=requestAnimationFrame(animatePointer)
   },{passive:true})
-  startScreen.addEventListener('pointerleave',()=>startScreen.classList.remove('has-pointer'))
+  window.addEventListener('pointerout',event=>{if(!event.relatedTarget)hidePointer()})
+  window.addEventListener('blur',hidePointer)
   const orbitObserver=new IntersectionObserver(entries=>{
     startScreen.classList.toggle('is-orbiting',entries[0].isIntersecting&&!document.hidden)
   },{threshold:0.05})
   orbitObserver.observe(startScreen)
   document.addEventListener('visibilitychange',()=>{
+    if(document.hidden)hidePointer()
     startScreen.classList.toggle('is-orbiting',!document.hidden&&startScreen.getBoundingClientRect().bottom>0&&startScreen.getBoundingClientRect().top<window.innerHeight)
   })
 }
