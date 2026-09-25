@@ -266,11 +266,14 @@ body{background:var(--cream)}
 
 .start-screen__sound-hint{display:block;margin-top:6px;color:#536855;font-size:11px;font-weight:700}
 
-/* A short Meituan-yellow streak appears only while the pointer moves. */
-.cursor-trail{position:fixed;z-index:21;left:0;top:0;border-radius:999px;pointer-events:none;opacity:0;transform:translate3d(-100%,0,0);transition:opacity .2s ease}
-.cursor-trail--near{width:42px;height:9px;background:linear-gradient(90deg,transparent,rgba(237,163,0,.5) 48%,rgba(255,202,29,.72))}
-.cursor-trail--far{width:25px;height:5px;background:linear-gradient(90deg,transparent,rgba(255,194,24,.4) 52%,rgba(255,208,55,.5))}
-.is-pointer-moving .cursor-trail{opacity:1}
+/* The supplied Meituan delivery mascot repeats smaller and fainter behind a moving pointer. */
+.cursor-trail{position:fixed;z-index:21;left:0;top:0;width:52px;height:45px;pointer-events:none;opacity:0;background:url('./assets/meituan-delivery-icon.png') center/contain no-repeat;transform:translate3d(-100%,0,0) translate(-50%,-50%) scale(var(--trail-scale));transition:opacity .18s ease}
+.cursor-trail--near{--trail-scale:1}
+.cursor-trail--middle{--trail-scale:.72}
+.cursor-trail--far{--trail-scale:.48}
+.is-pointer-moving .cursor-trail--near{opacity:.94}
+.is-pointer-moving .cursor-trail--middle{opacity:.52}
+.is-pointer-moving .cursor-trail--far{opacity:.25}
 .start-atlas__nodes{position:absolute;inset:0;transform-origin:50% 50%}
 .start-atlas__route{transform-origin:50% 50%}
 .start-screen.is-orbiting .start-atlas__nodes,.start-screen.is-orbiting .start-atlas__route{animation:atlas-orbit 72s linear infinite}

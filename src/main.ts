@@ -391,27 +391,30 @@ const startScreen=document.querySelector<HTMLElement>('#start')!
 const startAtlas=document.querySelector<HTMLElement>('#start-atlas')!
 const startNodes=document.querySelector<HTMLElement>('#start-atlas-nodes')!
 if(!reducedMotion){
-  const [near,far]=[...document.querySelectorAll<HTMLElement>('.cursor-trail')]
+  const [near,middle,far]=[...document.querySelectorAll<HTMLElement>('.cursor-trail')]
   let pointerFrame=0
   let pointerX=0
   let pointerY=0
   let nearX=0
   let nearY=0
+  let middleX=0
+  let middleY=0
   let farX=0
   let farY=0
-  let trailAngle=0
   let idleTimer=0
   const moveTrail=(element:HTMLElement,x:number,y:number)=>{
-    element.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%) rotate(${trailAngle}deg)`
+    element.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%) scale(var(--trail-scale))`
   }
   const animatePointer=()=>{
-    nearX+=(pointerX-nearX)*.26
-    nearY+=(pointerY-nearY)*.26
-    farX+=(nearX-farX)*.18
-    farY+=(nearY-farY)*.18
-    const gap=Math.hypot(pointerX-nearX,pointerY-nearY)+Math.hypot(nearX-farX,nearY-farY)
-    if(gap>1)trailAngle=Math.atan2(pointerY-farY,pointerX-farX)*180/Math.PI
+    nearX+=(pointerX-nearX)*.32
+    nearY+=(pointerY-nearY)*.32
+    middleX+=(nearX-middleX)*.22
+    middleY+=(nearY-middleY)*.22
+    farX+=(middleX-farX)*.16
+    farY+=(middleY-farY)*.16
+    const gap=Math.hypot(pointerX-nearX,pointerY-nearY)+Math.hypot(nearX-middleX,nearY-middleY)+Math.hypot(middleX-farX,middleY-farY)
     moveTrail(near,nearX,nearY)
+    moveTrail(middle,middleX,middleY)
     moveTrail(far,farX,farY)
     pointerFrame=gap>.6?requestAnimationFrame(animatePointer):0
   }
@@ -424,8 +427,8 @@ if(!reducedMotion){
     pointerX=event.clientX
     pointerY=event.clientY
     if(!document.documentElement.classList.contains('is-pointer-moving')){
-      nearX=farX=pointerX
-      nearY=farY=pointerY
+      nearX=middleX=farX=pointerX
+      nearY=middleY=farY=pointerY
     }
     document.documentElement.classList.add('is-pointer-moving')
     window.clearTimeout(idleTimer)
