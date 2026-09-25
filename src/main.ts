@@ -391,7 +391,7 @@ const startScreen=document.querySelector<HTMLElement>('#start')!
 const startAtlas=document.querySelector<HTMLElement>('#start-atlas')!
 const startNodes=document.querySelector<HTMLElement>('#start-atlas-nodes')!
 if(!reducedMotion){
-  const [core,near,far]=[...document.querySelectorAll<HTMLElement>('.cursor-trail')]
+  const [near,far]=[...document.querySelectorAll<HTMLElement>('.cursor-trail')]
   let pointerFrame=0
   let pointerX=0
   let pointerY=0
@@ -399,30 +399,37 @@ if(!reducedMotion){
   let nearY=0
   let farX=0
   let farY=0
-  const moveLight=(element:HTMLElement,x:number,y:number)=>{
-    element.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%)`
+  let trailAngle=0
+  let idleTimer=0
+  const moveTrail=(element:HTMLElement,x:number,y:number)=>{
+    element.style.transform=`translate3d(${x}px,${y}px,0) translate(-50%,-50%) rotate(${trailAngle}deg)`
   }
   const animatePointer=()=>{
-    moveLight(core,pointerX,pointerY)
     nearX+=(pointerX-nearX)*.26
     nearY+=(pointerY-nearY)*.26
     farX+=(nearX-farX)*.18
     farY+=(nearY-farY)*.18
-    moveLight(near,nearX,nearY)
-    moveLight(far,farX,farY)
     const gap=Math.hypot(pointerX-nearX,pointerY-nearY)+Math.hypot(nearX-farX,nearY-farY)
+    if(gap>1)trailAngle=Math.atan2(pointerY-farY,pointerX-farX)*180/Math.PI
+    moveTrail(near,nearX,nearY)
+    moveTrail(far,farX,farY)
     pointerFrame=gap>.6?requestAnimationFrame(animatePointer):0
   }
-  const hidePointer=()=>document.documentElement.classList.remove('has-pointer')
+  const hidePointer=()=>{
+    window.clearTimeout(idleTimer)
+    document.documentElement.classList.remove('is-pointer-moving')
+  }
   window.addEventListener('pointermove',event=>{
     if(event.pointerType==='touch')return
     pointerX=event.clientX
     pointerY=event.clientY
-    if(!document.documentElement.classList.contains('has-pointer')){
+    if(!document.documentElement.classList.contains('is-pointer-moving')){
       nearX=farX=pointerX
       nearY=farY=pointerY
     }
-    document.documentElement.classList.add('has-pointer')
+    document.documentElement.classList.add('is-pointer-moving')
+    window.clearTimeout(idleTimer)
+    idleTimer=window.setTimeout(hidePointer,110)
     if(!pointerFrame)pointerFrame=requestAnimationFrame(animatePointer)
   },{passive:true})
   window.addEventListener('pointerout',event=>{if(!event.relatedTarget)hidePointer()})

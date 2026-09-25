@@ -266,12 +266,11 @@ body{background:var(--cream)}
 
 .start-screen__sound-hint{display:block;margin-top:6px;color:#536855;font-size:11px;font-weight:700}
 
-/* A compact Meituan-yellow cursor trail follows the pointer across every chapter. */
-.cursor-trail{position:fixed;z-index:21;left:0;top:0;aspect-ratio:1;border-radius:50%;pointer-events:none;opacity:0;transform:translate3d(-100%,0,0);transition:opacity .28s ease}
-.cursor-trail--core{width:64px;background:radial-gradient(circle,rgba(231,158,0,.56),rgba(255,202,36,.28) 43%,transparent 72%)}
-.cursor-trail--near{width:48px;background:radial-gradient(circle,rgba(244,178,8,.28),transparent 75%)}
-.cursor-trail--far{width:34px;background:radial-gradient(circle,rgba(255,205,39,.2),transparent 76%)}
-.has-pointer .cursor-trail{opacity:1}
+/* A short Meituan-yellow streak appears only while the pointer moves. */
+.cursor-trail{position:fixed;z-index:21;left:0;top:0;border-radius:999px;pointer-events:none;opacity:0;transform:translate3d(-100%,0,0);transition:opacity .2s ease}
+.cursor-trail--near{width:42px;height:9px;background:linear-gradient(90deg,transparent,rgba(237,163,0,.5) 48%,rgba(255,202,29,.72))}
+.cursor-trail--far{width:25px;height:5px;background:linear-gradient(90deg,transparent,rgba(255,194,24,.4) 52%,rgba(255,208,55,.5))}
+.is-pointer-moving .cursor-trail{opacity:1}
 .start-atlas__nodes{position:absolute;inset:0;transform-origin:50% 50%}
 .start-atlas__route{transform-origin:50% 50%}
 .start-screen.is-orbiting .start-atlas__nodes,.start-screen.is-orbiting .start-atlas__route{animation:atlas-orbit 72s linear infinite}
